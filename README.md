@@ -1,114 +1,89 @@
-# AWS Scalable Web App Architecture
+# AWS Scalable & Auto-Scaling Web Architecture
 
-Designed and deployed a highly available and scalable web application infrastructure on AWS using EC2, VPC, and Application Load Balancer.
+Designed and deployed a highly available, auto-scaling web architecture on AWS using EC2, Launch Templates, Application Load Balancer, and Auto Scaling Groups.
 
 ---
 
 ## Overview
 
-This project demonstrates how to build a production-style cloud architecture that distributes traffic across multiple servers using a load balancer.
+This project demonstrates a production-style cloud architecture that distributes traffic across multiple servers and automatically scales based on demand.
 
-Instead of relying on a single server, this setup improves:
-- Availability
+Instead of relying on a single server, this setup provides:
+- High availability
 - Fault tolerance
-- Scalability
+- Horizontal scalability
+- Self-healing infrastructure
 
 ---
 
 ## Architecture
 
 - Custom VPC (10.0.0.0/16)
-- 2 Public Subnets (multi-AZ)
-  - 10.0.1.0/24 (us-east-1a)
-  - 10.0.2.0/24 (us-east-1b)
+- 2 Public Subnets (Multi-AZ)
+- 10.0.1.0/24 (us-east-1a)
+- 10.0.2.0/24 (us-east-1b)
 - Internet Gateway (IGW)
-- Route Table with internet routing (0.0.0.0/0)
-- 2 EC2 Instances (Apache Web Servers)
+- Route Table (0.0.0.0/0 → IGW)
 - Application Load Balancer (ALB)
 - Target Group with health checks
-
----
-
-## Architecture Diagram
-
-![VPC Architecture](images/vpc-architecture.png)
+- Launch Template (preconfigured EC2)
+- Auto Scaling Group (ASG)
+- Apache Web Server (via User Data)
 
 ---
 
 ## Load Balancing
 
-The Application Load Balancer distributes incoming HTTP traffic across two EC2 instances.
-
-![Load Balancer](images/load-balancer.png)
+The Application Load Balancer distributes incoming HTTP traffic across multiple EC2 instances running in different Availability Zones.
 
 ---
 
-## EC2 Instances
+## Auto Scaling
 
-Two EC2 instances were deployed in separate Availability Zones for high availability.
+The Auto Scaling Group ensures:
 
-![EC2 Instances](images/ec2-instances-1.png)
-![EC2 Instances](images/ec2-instances-2.png)
-![EC2 Instances](images/ec2-instances-3.png)
-
----
-
-## Target Group Health
-
-Both instances are registered and healthy in the target group.
-
-![Target Group](images/target-group.png)
+- Minimum of 2 instances always running
+- Automatic replacement of failed instances
+- Scaling out when CPU usage increases
+- Scaling in when demand decreases
 
 ---
 
-## Live Traffic Test
+## User Data Automation
 
-Verified load balancing by refreshing the Load Balancer DNS and observing alternating responses:
+Each EC2 instance is automatically configured at launch using this script:
 
-### Server 1
-![Server 1](images/server1.png)
+**
+bash
+#!/bin/bash
+sudo dnf update -y
+sudo dnf install httpd -y
+sudo systemctl start httpd
+sudo systemctl enable httpd
+echo "<h1>Auto Scaled Server 🚀</h1>" > /var/www/html/index.html
+**
 
-### Server 2
-![Server 2](images/server2.png)
+## What I Did
+  Created a custom VPC with CIDR block
+  Designed multi-AZ subnet architecture
+  Configured Internet Gateway and routing
+  Deployed EC2 instances with Apache web server
+  Built Application Load Balancer
+  Created and configured target group
+  Implemented Launch Template
+  Configured Auto Scaling Group
+  Automated server provisioning with User Data
+  Verified load balancing and failover behavior
 
----
+## Key Concepts Learned
+  VPC and subnet design
+  Public networking and routing
+  EC2 provisioning and configuration
+  Load balancing (ALB)
+  Target groups and health checks
+  Launch templates
+  Auto Scaling Groups
+  Infrastructure automation
+  Horizontal scaling
 
-## 🔧 What I Did
-
-- Created a custom VPC with defined CIDR block
-- Designed and configured public subnets across multiple AZs
-- Attached an Internet Gateway for external access
-- Configured route tables for internet routing
-- Launched and configured EC2 instances (Apache web servers)
-- Created and configured a security group (HTTP & SSH)
-- Built an Application Load Balancer
-- Created a target group and registered EC2 instances
-- Verified traffic distribution across multiple servers
-
----
-
-## 🧠 Key Concepts Learned
-
-- VPC and subnet design
-- Public vs private networking
-- Internet Gateway and routing
-- EC2 provisioning and configuration
-- Load balancing (ALB)
-- Target groups and health checks
-- Horizontal scaling fundamentals
-
----
-
-## 📈 Future Improvements
-
-- Implement Auto Scaling Group
-- Add HTTPS (SSL/TLS with ACM)
-- Move backend to private subnet
-- Add RDS database layer
-- Use user data scripts for automation
-
----
-
-## 💡 Summary
-
-This project simulates a real-world cloud architecture used in production environments, demonstrating scalable and fault-tolerant infrastructure design on AWS.
+This project simulates a real-world cloud architecture where infrastructure is scalable, resilient, and automated key requirements for modern cloud engineering environments.
