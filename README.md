@@ -63,27 +63,23 @@ sudo systemctl enable httpd
 echo "<h1>Auto Scaled Server 🚀</h1>" > /var/www/html/index.html
 **
 
-## What I Did
-  Created a custom VPC with CIDR block
-  Designed multi-AZ subnet architecture
-  Configured Internet Gateway and routing
-  Deployed EC2 instances with Apache web server
-  Built Application Load Balancer
-  Created and configured target group
-  Implemented Launch Template
-  Configured Auto Scaling Group
-  Automated server provisioning with User Data
-  Verified load balancing and failover behavior
 
-## Key Concepts Learned
-  VPC and subnet design
-  Public networking and routing
-  EC2 provisioning and configuration
-  Load balancing (ALB)
-  Target groups and health checks
-  Launch templates
-  Auto Scaling Groups
-  Infrastructure automation
-  Horizontal scaling
+## 📸 Screenshots
 
-This project simulates a real-world cloud architecture where infrastructure is scalable, resilient, and automated key requirements for modern cloud engineering environments.
+### VPC Architecture
+![VPC Architecture](images/vpc-architecture.png)
+
+### Subnets (Multi-AZ)
+![Subnets](images/subnets.png)
+
+### EC2 Instances
+![EC2 Instances](images/ec2-instances.png)
+
+### Load Balancer
+![Load Balancer](images/load-balancer.png)
+
+### Target Group Health
+![Target Group](images/target-group.png)
+
+### Auto Scaling Group
+![Auto Scaling](images/autoscaling.png)
